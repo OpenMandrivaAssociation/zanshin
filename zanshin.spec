@@ -1,6 +1,6 @@
 Name:           zanshin
 Version:        0.5.0
-Release:        1
+Release:        2
 Summary:        Getting Things Done application
 Group:          Graphical desktop/KDE
 License:        GPLv2+ and LGPLv2+
