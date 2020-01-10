@@ -72,7 +72,7 @@ A note taking application which aims at getting your mind like water.
 
 %prep
 %setup -q
-%apply_patches
+%autopatch -p1
 
 %build
 %cmake_kde5
