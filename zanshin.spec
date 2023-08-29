@@ -1,24 +1,28 @@
+%define stable %([ "`echo %{version} |cut -d. -f3`" -ge 70 ] && echo -n un; echo -n stable)
 Name:           zanshin
-Version:        0.5.0
-Release:        2
+Version:        23.08.0
+Release:        1
 Summary:        Getting Things Done application
 Group:          Graphical desktop/KDE
 License:        GPLv2+ and LGPLv2+
 URL:            https://zanshin.kde.org
-Source0:        https://download.kde.org/stable/%{name}/%{name}-%{version}.tar.xz
-Recommends:     renku
+%if 0%{?git}
+Source0:	https://invent.kde.org/plasma-mobile/plasma-angelfish/-/archive/v%{version}/plasma-angelfish-v%{version}.tar.bz2
+%else
+Source0:	http://download.kde.org/%{stable}/release-service/%{version}/src/%{name}-%{version}.tar.xz
+%endif
 
 BuildRequires:  boost-devel
 BuildRequires:  cmake
 BuildRequires:  gettext
 BuildRequires:  cmake(ECM)
-BuildRequires:  cmake(KF5Akonadi)
-BuildRequires:  cmake(KF5AkonadiCalendar)
-BuildRequires:  cmake(KF5AkonadiNotes)
-BuildRequires:  cmake(KF5AkonadiSearch)
-BuildRequires:  cmake(KF5IdentityManagement)
-BuildRequires:  cmake(KF5KontactInterface)
-BuildRequires:  cmake(KF5Ldap)
+BuildRequires:  cmake(KPim5Akonadi)
+BuildRequires:  cmake(KPim5AkonadiCalendar)
+BuildRequires:  cmake(KPim5AkonadiNotes)
+BuildRequires:  cmake(KPim5AkonadiSearch)
+BuildRequires:  cmake(KPim5IdentityManagement)
+BuildRequires:  cmake(KPim5KontactInterface)
+BuildRequires:  cmake(KPim5Ldap)
 BuildRequires:  cmake(KF5Runner)
 BuildRequires:  cmake(KF5Wallet)
 BuildRequires:  cmake(KF5WindowSystem)
@@ -34,59 +38,27 @@ BuildRequires:  pkgconfig(Qt5Widgets)
 A Getting Things Done application which aims at getting your mind like water.
 
 %files -f %{name}.lang
-%doc AUTHORS COPYING COPYING.LIB HACKING TODO
-%{_kde5_bindir}/%{name}
-%{_kde5_bindir}/%{name}-migrator
-%{_qt5_plugindir}/kontact_zanshinplugin.so
-%{_qt5_plugindir}/krunner_zanshin.so
-%{_qt5_plugindir}/zanshin_part.so
-%{_datadir}/metainfo/org.kde.%{name}.appdata.xml
-%{_kde5_applicationsdir}/org.kde.%{name}.desktop
-%{_kde5_datadir}/kxmlgui5/%{name}/
-%{_kde5_services}/kontact/zanshin_plugin.desktop
-%{_kde5_services}/plasma-runner-zanshin.desktop
-%{_kde5_services}/zanshin_part.desktop
-%{_kde5_iconsdir}/hicolor/*/apps/%{name}.*
+%{_bindir}/zanshin
+%{_bindir}/zanshin-migrator
+%{_libdir}/qt5/plugins/kf5/krunner/org.kde.zanshin.so
+%{_libdir}/qt5/plugins/pim5/kontact/kontact_zanshinplugin.so
+%{_libdir}/qt5/plugins/zanshin_part.so
+%{_datadir}/applications/org.kde.zanshin.desktop
+%{_datadir}/icons/hicolor/*/apps/zanshin.*
+%{_datadir}/kxmlgui5/zanshin/zanshin_part.rc
+%{_datadir}/metainfo/org.kde.zanshin.metainfo.xml
 
-%package -n renku
-Summary:        Note taking application
-Group:          Graphical desktop/KDE
-Recommends:     %{name}
-
-%description -n renku
-A note taking application which aims at getting your mind like water.
-
-%files -n renku
-%{_kde5_bindir}/renku
-%{_qt5_plugindir}/kontact_renkuplugin.so
-%{_qt5_plugindir}/renku_part.so
-%{_datadir}/metainfo/org.kde.renku.appdata.xml
-%{_kde5_applicationsdir}/org.kde.renku.desktop
-%{_kde5_datadir}/kxmlgui5/renku/
-%{_kde5_services}/kontact/renku_plugin.desktop
-%{_kde5_services}/renku_part.desktop
-%{_kde5_iconsdir}/hicolor/*/apps/renku.*
-
-#---------------------------------------------------------------))
+#---------------------------------------------------------------
 
 
 %prep
-%setup -q
-%autopatch -p1
+%autosetup -p1
+%cmake_kde5
 
 %build
-%cmake_kde5
-%ninja
+%ninja_build -C build
 
 %install
 %ninja_install -C build
 
 %find_lang %{name}
-
-# Make a copy of the icons for renku, to make them installable separately
-for file in %{buildroot}%{_kde5_iconsdir}/hicolor/*/apps/%{name}.png; do
-  cp $file "$(dirname $file)/renku.png"
-done
-cp %{buildroot}%{_kde5_iconsdir}/hicolor/scalable/apps/{%{name},renku}.svgz
-sed -i 's/Icon=zanshin/Icon=renku/' %{buildroot}%{_kde5_applicationsdir}/org.kde.renku.desktop
-
