@@ -1,7 +1,7 @@
 %define stable %([ "`echo %{version} |cut -d. -f3`" -ge 70 ] && echo -n un; echo -n stable)
 Name:           zanshin
 Version:        23.08.4
-Release:        2
+Release:        3
 Summary:        Getting Things Done application
 Group:          Graphical desktop/KDE
 License:        GPLv2+ and LGPLv2+
