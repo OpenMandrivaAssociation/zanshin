@@ -29,9 +29,13 @@ BuildRequires:  cmake(KF6WindowSystem)
 BuildRequires:  cmake(KF6I18n)
 BuildRequires:  pkgconfig(Qt6Core)
 BuildRequires:  pkgconfig(Qt6Gui)
-BuildRequires:  pkgconfig(Qt6Qml)
+BuildRequires: cmake(Qt6Qml)
+BuildRequires: cmake(Qt6QmlCore)
+BuildRequires: cmake(Qt6QmlNetwork)
 BuildRequires:  pkgconfig(Qt6Test)
 BuildRequires:  pkgconfig(Qt6Widgets)
+BuildRequires: qt6-qtbase-theme-gtk3
+BuildRequires: qt6-qtmultimedia-gstreamer
 
 %description
 A Getting Things Done application which aims at getting your mind like water.
