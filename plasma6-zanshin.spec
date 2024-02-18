@@ -1,15 +1,26 @@
+%define git 20240218
+%define gitbranch release/24.02
+%define gitbranchd %(echo %{gitbranch} |sed -e "s,/,-,g")
 %define stable %([ "`echo %{version} |cut -d. -f3`" -ge 70 ] && echo -n un; echo -n stable)
 Name:           plasma6-zanshin
-Version:        24.01.95
-Release:        1
+Version:        24.01.96
+Release:        %{?git:0.%{git}.}1
 Summary:        Getting Things Done application
 Group:          Graphical desktop/KDE
 License:        GPLv2+ and LGPLv2+
 URL:            https://zanshin.kde.org
 %if 0%{?git}
+%if 0%{?git:1}
+Source0:	https://invent.kde.org/pim/zanshin/-/archive/%{gitbranch}/zanshin-%{gitbranchd}.tar.bz2#/zanshin-%{git}.tar.bz2
+%else
 Source0:	https://invent.kde.org/plasma-mobile/plasma-angelfish/-/archive/v%{version}/plasma-angelfish-v%{version}.tar.bz2
+%endif
+%else
+%if 0%{?git:1}
+Source0:	https://invent.kde.org/pim/zanshin/-/archive/%{gitbranch}/zanshin-%{gitbranchd}.tar.bz2#/zanshin-%{git}.tar.bz2
 %else
 Source0:	http://download.kde.org/%{stable}/release-service/%{version}/src/zanshin-%{version}.tar.xz
+%endif
 %endif
 
 BuildRequires:  boost-devel
@@ -54,7 +65,7 @@ A Getting Things Done application which aims at getting your mind like water.
 
 
 %prep
-%autosetup -p1 -n zanshin-%{?git:master}%{!?git:%{version}}
+%autosetup -p1 -n zanshin-%{?git:%{gitbranchd}}%{!?git:%{version}}
 %cmake \
 	-DKDE_INSTALL_USE_QT_SYS_PATHS:BOOL=ON \
 	-G Ninja
