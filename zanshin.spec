@@ -3,7 +3,7 @@
 %define gitbranchd %(echo %{gitbranch} |sed -e "s,/,-,g")
 %define stable %([ "`echo %{version} |cut -d. -f3`" -ge 70 ] && echo -n un; echo -n stable)
 Name:           zanshin
-Version:        25.04.0
+Version:        25.04.3
 Release:        %{?git:0.%{git}.}1
 Summary:        Getting Things Done application
 Group:          Graphical desktop/KDE
@@ -24,7 +24,6 @@ Source0:	http://download.kde.org/%{stable}/release-service/%{version}/src/zanshi
 %endif
 
 BuildRequires:  boost-devel
-BuildRequires:  cmake
 BuildRequires:  gettext
 BuildRequires:  cmake(ECM)
 BuildRequires:  cmake(KPim6Akonadi)
@@ -48,6 +47,11 @@ BuildRequires:  pkgconfig(Qt6Widgets)
 BuildRequires: qt6-qtbase-theme-gtk3
 BuildRequires: qt6-qtmultimedia-gstreamer
 
+%rename plasma6-zanshin
+
+BuildSystem:	cmake
+BuildOption:	-DKDE_INSTALL_USE_QT_SYS_PATHS:BOOL=ON
+
 %description
 A Getting Things Done application which aims at getting your mind like water.
 
@@ -60,20 +64,3 @@ A Getting Things Done application which aims at getting your mind like water.
 %{_datadir}/applications/org.kde.zanshin.desktop
 %{_datadir}/icons/hicolor/*/apps/zanshin.*
 %{_datadir}/metainfo/org.kde.zanshin.metainfo.xml
-
-#---------------------------------------------------------------
-
-
-%prep
-%autosetup -p1 -n zanshin-%{?git:%{gitbranchd}}%{!?git:%{version}}
-%cmake \
-	-DKDE_INSTALL_USE_QT_SYS_PATHS:BOOL=ON \
-	-G Ninja
-
-%build
-%ninja_build -C build
-
-%install
-%ninja_install -C build
-
-%find_lang zanshin
