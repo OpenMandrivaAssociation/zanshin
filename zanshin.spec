@@ -28,7 +28,6 @@ BuildRequires:  gettext
 BuildRequires:  cmake(ECM)
 BuildRequires:  cmake(KPim6Akonadi)
 BuildRequires:  cmake(KPim6AkonadiCalendar)
-BuildRequires:  cmake(KPim6AkonadiNotes)
 BuildRequires:  cmake(KPim6AkonadiSearch)
 BuildRequires:  cmake(KPim6IdentityManagementCore)
 BuildRequires:  cmake(KPim6KontactInterface)
